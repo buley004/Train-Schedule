@@ -38,4 +38,42 @@ function addTrain() {
 
 }
 
-$('.submit').on('click', addTrain());
+//update schedule when train is added
+database.ref().on("child_added", function (childSnapshot) {
+
+    var row = new $('<tr>');
+
+    // get frequency from new train
+    var frequency = childSnapshot.val().freq;
+
+    // get first train time
+    var first = childSnapshot.val().firstTime;
+
+    // set first time adjusted
+    var firstTime = moment(first, "HH:mm").subtract(1, "years");
+
+    // set current time
+    var currentTime = moment();
+    console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+
+    // Difference
+    var difference = moment().diff(moment(firstTime), "minutes") % frequency;
+    console.log("Remainder: " + difference);
+
+    // Minutes left till arrival
+    var minutes = frequency - difference;
+    console.log("MINUTES TILL TRAIN: " + minutes);
+
+    // Next train arrival 
+    var nextTrain = moment().add(minutes, "minutes").format("HH:mm");
+
+    row.append($('<td>').text(childSnapshot.val().trainName));
+    row.append($('<td>').text(childSnapshot.val().destination));
+    row.append($('<td>').text(childSnapshot.val().freq));
+    row.append($('<td>').text(nextTrain));
+    row.append($('<td>').text(minutes));
+
+    console.log(row);
+
+    $('#trainList').append(row);
+});
