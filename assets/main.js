@@ -52,17 +52,11 @@ database.ref().on("child_added", function (childSnapshot) {
     // set first time adjusted
     var firstTime = moment(first, "HH:mm").subtract(1, "years");
 
-    // set current time
-    var currentTime = moment();
-    console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
-
     // Difference
     var difference = moment().diff(moment(firstTime), "minutes") % frequency;
-    console.log("Remainder: " + difference);
 
     // Minutes left till arrival
     var minutes = frequency - difference;
-    console.log("MINUTES TILL TRAIN: " + minutes);
 
     // Next train arrival 
     var nextTrain = moment().add(minutes, "minutes").format("HH:mm");
