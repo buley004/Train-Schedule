@@ -26,8 +26,6 @@ function addTrain() {
     firstTime = $("#firstTime").val().trim();
     freq = $("#freq").val().trim();
 
-    console.log(trainName, destination, firstTime, freq);
-
     // Code for handling the push
     database.ref().push({
         trainName: trainName,
@@ -35,6 +33,12 @@ function addTrain() {
         firstTime: firstTime,
         freq: freq,
     });
+
+    //empty text fields
+    $("#trainName").val("");
+    $("#destination").val("");
+    $("#firstTime").val("");
+    $("#freq").val("");
 
 }
 
@@ -59,15 +63,15 @@ database.ref().on("child_added", function (childSnapshot) {
     var minutes = frequency - difference;
 
     // Next train arrival 
-    var nextTrain = moment().add(minutes, "minutes").format("HH:mm");
+    var nextTrain = moment().add(minutes, "minutes").format("hh:mm a");
 
+    // Add data to the new row
     row.append($('<td>').text(childSnapshot.val().trainName));
     row.append($('<td>').text(childSnapshot.val().destination));
     row.append($('<td>').text(childSnapshot.val().freq));
     row.append($('<td>').text(nextTrain));
     row.append($('<td>').text(minutes));
 
-    console.log(row);
-
+    // Add row to train table
     $('#trainList').append(row);
 });
